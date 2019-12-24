@@ -14,6 +14,9 @@ public interface UserDao {
     @Query("select * from users")
     public List<UserEntity> getAll();
 
+    @Query("select * from users where id = :selectedId")
+    public UserEntity getById(int selectedId);
+
     @Insert
     public void insert(UserEntity user);
 
