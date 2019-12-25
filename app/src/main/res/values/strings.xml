@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Room Sample</string>
+    <string name="string_confirm">Confirm</string>
+    <string name="string_email">Email Address</string>
+    <string name="string_name">Username</string>
+    <string name="string_number">Phone Number</string>
+    <string name="string_Optional">(Optional)</string>
+    <string name="string_alert_title">Warning!</string>
+    <string name="string_alert_edtUsername">Please Set Your Username!</string>
+    <string name="string_alert_edtEmail">1- Email is Optional.\n
+2- Write It Standard.</string>
+    <string name="string_alert_edtNumber">Please Set Your Phone Number!</string>
+
+
+
 </resources>
