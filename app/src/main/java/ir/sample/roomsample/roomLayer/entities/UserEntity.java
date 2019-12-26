@@ -2,7 +2,6 @@ package ir.sample.roomsample.roomLayer.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "users")
@@ -21,14 +20,13 @@ public class UserEntity {
 
     public UserEntity(String name, String email, String number) {
         this.name = name;
-        this.email=email;
+        this.email=(email==null) ? "":email;
         this.number = number;
     }
-
     public UserEntity(int id, String name, String email, String number) {
         this.id = id;
         this.name = name;
-        this.email = email;
+        this.email = (email==null) ? "":email;
         this.number = number;
     }
 }

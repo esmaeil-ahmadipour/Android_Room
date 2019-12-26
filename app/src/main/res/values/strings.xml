@@ -10,7 +10,7 @@
     <string name="string_alert_edtEmail">1- Email is Optional.\n
 2- Write It Standard.</string>
     <string name="string_alert_edtNumber">Please Set Your Phone Number!</string>
-
+    <string name="title_activity_users">UsersActivity</string>
 
 
 </resources>

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,9 +15,12 @@ import ir.sample.roomsample.roomLayer.dataAccessObjects.UserDao;
 import ir.sample.roomsample.roomLayer.entities.UserEntity;
 
 public class MainActivity extends AppCompatActivity {
-    private String alertMessage;
-    private int userId = 0;
     Context context = this;
+    private boolean isEditMode = false;
+    private String alertMessage;
+    private AppDatabase db;
+    private int getIntentData ;
+    private Bundle bundle;
     private Button btnConfirm;
     private EditText edtNumber, edtEmail, edtName;
 
@@ -25,7 +29,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setViews();
+
+        db = AppDatabase.getInstance(context);
+        bundle=getIntent().getExtras();
+        if (bundle != null) {
+            getIntentData=bundle.getInt("id");
+            isEditMode = true;
+            prepareEditMode();
+        } else {
+            isEditMode = false;
+        }
+
         listeners();
+    }
+
+    private void prepareEditMode() {
+        UserEntity dbGetData = db.user().getById(getIntentData);
+        edtName.setText(dbGetData.name);
+        edtEmail.setText(dbGetData.email);
+        edtNumber.setText(String.valueOf(dbGetData.number));
     }
 
     private void listeners() {
@@ -42,13 +64,19 @@ public class MainActivity extends AppCompatActivity {
                     String name = edtName.getText().toString();
                     String email = edtEmail.getText().toString();
                     String number = edtNumber.getText().toString();
-                    sendData(name, email, number);
-                    intentLoadData();
-
+                    if (isEditMode) {
+                        editData(getIntentData, name, email, number);
+                    } else {
+                        addData(name, email, number);
+                    }
+                    // Load Data in TextView (ForTest)
+                    /*
+                       intentLoadData()
+                    */
+                    finish();
                 } else {
                     Toast.makeText(context, alertMessage, Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
     }
@@ -60,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             validate = false;
             alertMessage = context.getResources().getString(R.string.string_alert_edtUsername);
         }
-        if ((!(edtEmail.getText().toString().contains("@"))) && !(edtEmail.getText().toString()+"" == "") ) {
+        if ((!(edtEmail.getText().toString().contains("@"))) && !(edtEmail.getText().toString() + "" == "")) {
             validate = false;
             alertMessage = context.getResources().getString(R.string.string_alert_edtEmail);
         }
@@ -72,18 +100,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Pass Received Data To New UserEntity Object And Use This Object To Insert Data.
-    private void sendData(String name, String email, String number) {
+    private void addData(String name, String email, String number) {
         UserDao userData = AppDatabase.getInstance(context).user();
-        UserEntity user = new UserEntity(userId, name, email, number);
+        UserEntity user = new UserEntity(name, email, number);
         userData.insert(user);
     }
 
+    private void editData(int id, String name, String email, String number) {
+        UserDao userData = AppDatabase.getInstance(context).user();
+        UserEntity user = new UserEntity(id, name, email, number);
+        userData.update(user);
+    }
+
     // Intent to LoadDataActivity
+    /*
     private void intentLoadData() {
         Intent intent = new Intent(MainActivity.this, LoadDataActivity.class);
         startActivity(intent);
     }
-
+    */
     private void setViews() {
         btnConfirm = (Button) findViewById(R.id.btn_main_confirm);
         edtName = (EditText) findViewById(R.id.edt_main_name);
